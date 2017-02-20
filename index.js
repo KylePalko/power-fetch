@@ -51,10 +51,6 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 req.open(method, url, true);
 
-                req.addEventListener("progress", (e) => {
-
-                })
-
                 req.addEventListener("load", (e) => {
                     handle({
                         headers: req.headers,
@@ -67,10 +63,6 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 req.addEventListener("error", (e) => {
                     reject(e.target._response)
-                })
-
-                req.addEventListener("abort", (e) => {
-                    promiseReject('cancelled')
                 })
 
                 for (let key of Object.keys(headers)) {
