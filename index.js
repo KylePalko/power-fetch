@@ -7,7 +7,7 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
     } else if (METHODS[method] == null) {
         throw `Expecting { method } parameter to be ${Object.keys(METHODS)}`
     } else if (new RegExp(!/^https?:\/\//, 'i').test(url)) {
-        throw `{ url } paramenter must begin with http:// or https://`
+        throw `{ url } parameter must begin with http:// or https://`
     }
 
     let cancel = () => { console.warn('Cancel was called before connection could start') }
