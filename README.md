@@ -8,13 +8,13 @@ Power Fetch is built on XMLHttpRequest to allow true cancel/abort of your connec
 import fetch, { METHODS, HEADERS } from 'power-fetch'
 
 const getIp = () => {
-    return call({
+    return fetch({
         url: 'http://ip.jsontest.com/',
         method: METHODS.GET,
         headers: {
             ...HEADERS.JSON
-        }
-        numberOfAttempts: 5,
+        },
+        numberOfAttempts: 5, // Setting this to 0 will set the fetch to try indefinitely.
         timeBeforeTimeout: 2000,
         timeBetweenAttempts: 5000
     }, ({ headers, status, json, resolve, reject }) => {
