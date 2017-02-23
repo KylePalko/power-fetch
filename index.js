@@ -27,6 +27,9 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 errors.push(err)
 
+                if (numberOfAttempts == 0) {
+                    call()
+                }
                 if (currentAttempts >= numberOfAttempts || err === 'cancel') {
                     if (numberOfAttempts != 0 && err != 'cancel') {
                         promiseReject(errors)

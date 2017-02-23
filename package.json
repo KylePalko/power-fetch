@@ -1,6 +1,6 @@
 {
   "name": "power-fetch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A better fetch for React Native with timeouts, retries and cancelling",
   "main": "index.js",
   "scripts": {
