@@ -56,12 +56,14 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 req.open(method, url, true);
 
-                let json = null
-                try {
-                    json = JSON.parse(req.responseText)
-                } catch (err) { }
 
                 req.addEventListener("load", (e) => {
+
+                    let json = null
+                    try {
+                        json = JSON.parse(req.responseText)
+                    } catch (err) { }
+
                     handle({
                         headers: req.headers,
                         status: req.status,
