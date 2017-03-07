@@ -56,11 +56,19 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 req.open(method, url, true);
 
+                let json
+                try {
+                    json = JSON.parse(req.responseText)
+                } catch (err) {
+                    json = {}
+                }
+
                 req.addEventListener("load", (e) => {
                     handle({
                         headers: req.headers,
                         status: req.status,
-                        json: JSON.parse(req.responseText),
+                        json,
+                        text: req.responseText,
                         resolve,
                         reject
                     })
@@ -145,7 +153,19 @@ const STATUS_CODES = {
     UNAVAILABLE_FOR_LEGAL_REASONS: 451,
     CLIENT_CLOSED_REQUEST: 499,
     INTERNAL_SERVER_ERROR: 500,
-    NOT_IMPLEMENTED: 501
+    NOT_IMPLEMENTED: 501,
+    BAD_GATEWAY: 502,
+    SERVICE_UNAVAILABLE: 503,
+    GATEWAY_TIMEOUT: 504,
+    HTTP_VERSION_NOT_SUPPORTED: 505,
+    VARIANT_ALSO_NEGOTIATES: 506,
+    INSUFFICIENT_STORAGE: 507,
+    LOOP_DETECTED: 508,
+    BANDWIDTH_LIMIT_EXCEEDED: 509,
+    NOT_EXTENDED: 510,
+    NETWORK_AUTHENTICATION_REQUIRED: 511,
+    NETWORK_READ_TIMEOUT_ERROR: 598,
+    NETWORK_CONNECTION_TIMEOUT_ERROR: 599
 }
 
 export { HEADERS, METHODS, STATUS_CODES }
