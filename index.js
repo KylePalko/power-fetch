@@ -27,7 +27,7 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 errors.push(err)
 
-                if (numberOfAttempts == 0) {
+                if (numberOfAttempts === 0) {
                     call()
                 }
                 if (currentAttempts >= numberOfAttempts || err === 'cancel') {
@@ -56,12 +56,10 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
                 req.open(method, url, true);
 
-                let json
+                let json = null
                 try {
                     json = JSON.parse(req.responseText)
-                } catch (err) {
-                    json = {}
-                }
+                } catch (err) { }
 
                 req.addEventListener("load", (e) => {
                     handle({
