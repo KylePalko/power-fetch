@@ -10,7 +10,7 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
         return { cancel: () => {}, response: new Promise((resolve, reject) => reject(err)) }
     }
 
-    let cancel
+    let cancel = () => { }
 
     return {
         cancel: () => cancel(),
@@ -24,14 +24,11 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
             const reject = (err) => {
 
                 clearTimeout(timeout)
-
                 errors.push(err)
 
-                if (numberOfAttempts === 0) {
-                    call()
-                } else if ((currentAttempts >= numberOfAttempts || err === 'cancel') &&
-                    numberOfAttempts !== 0 &&
-                    err !== 'cancel') {
+                if (err === 'cancel') {
+                    promiseReject(errors)
+                } else if (currentAttempts >=numberOfAttempts) {
                     promiseReject(errors)
                 } else {
                     call()
