@@ -35,8 +35,6 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
                 }
             }
 
-            cancel = () => reject('cancel')
-
             const resolve = (data) => {
                 clearTimeout(timeout)
                 promiseResolve(data)
@@ -44,11 +42,15 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
             const call = () => setTimeout(() => {
 
+
                 currentAttempts++
 
                 const req = new XMLHttpRequest();
 
-                this.abort = req.abort
+                cancel = () => {
+                    req.abort()
+                    reject('cancel')
+                }
 
                 req.open(method, url, true);
 
