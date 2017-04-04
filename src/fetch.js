@@ -2,7 +2,7 @@ import HEADERS from './constants/headers'
 import isValidInput from './func/isValidInput'
 
 
-export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
+export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
 
     try {
         isValidInput({ url, method, headers, numberOfAttempts, timeBetweenAttempts, timeBeforeTimeout })
@@ -79,7 +79,7 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
                     req.setRequestHeader(key, headers[key]);
                 }
 
-                req.send(null);
+                req.send(JSON.stringify(body));
 
                 if (timeBeforeTimeout !== 0) {
                     timeout = setTimeout(function () {
