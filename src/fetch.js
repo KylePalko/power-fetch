@@ -1,8 +1,8 @@
 import HEADERS from './constants/headers'
+import ERRORS from './constants/errors'
 import isValidInput from './func/isValidInput'
 
-
-export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
+export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
 
     try {
         isValidInput({ url, method, headers, numberOfAttempts, timeBetweenAttempts, timeBeforeTimeout })
@@ -26,9 +26,9 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
                 clearTimeout(timeout)
                 errors.push(err)
 
-                if (err === 'cancel') {
+                if (err === ERRORS.CANCEL || err === ERRORS.REQUEST_FAILED) {
                     promiseReject(errors)
-                } else if (currentAttempts >=numberOfAttempts) {
+                } else if (currentAttempts >= numberOfAttempts) {
                     promiseReject(errors)
                 } else {
                     call()
@@ -42,14 +42,13 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
 
             const call = () => setTimeout(() => {
 
-
                 currentAttempts++
 
                 const req = new XMLHttpRequest();
 
                 cancel = () => {
                     req.abort()
-                    reject('cancel')
+                    reject(ERRORS.CANCEL)
                 }
 
                 req.open(method, url, true);
@@ -72,19 +71,27 @@ export default ({ url, method, headers = HEADERS.JSON, numberOfAttempts = 1, tim
                 })
 
                 req.addEventListener("error", (e) => {
-                    reject(e.target._response)
+                    /* If status is unsent the request likely could not be sent due to
+                     * lack of an internet connection, but we return request-failed
+                     * to account for other reasons. */
+                    if (e.target.status === e.target.UNSENT) {
+                        req.abort()
+                        reject(ERRORS.REQUEST_FAILED)
+                    } else {
+                        reject(e.target._response)
+                    }
                 })
 
                 for (let key of Object.keys(headers)) {
                     req.setRequestHeader(key, headers[key]);
                 }
 
-                req.send(null);
+                req.send(JSON.stringify(body));
 
                 if (timeBeforeTimeout !== 0) {
                     timeout = setTimeout(function () {
                         req.abort()
-                        reject('timeout')
+                        reject(ERRORS.TIMEOUT)
                     }, timeBeforeTimeout)
                 }
             }, currentAttempts === 0 ? 0 : timeBetweenAttempts)
