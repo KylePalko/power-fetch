@@ -2,6 +2,8 @@ import HEADERS from './constants/headers'
 import ERRORS from './constants/errors'
 import isValidInput from './func/isValidInput'
 
+
+export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
 export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 1, timeBetweenAttempts = 0, timeBeforeTimeout = 0 }, handle) => {
 
     try {
