@@ -26,9 +26,11 @@ export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 
                 clearTimeout(timeout)
                 errors.push(err)
 
-                if (err === ERRORS.CANCEL || err === ERRORS.REQUEST_FAILED) {
+                if (err === ERRORS.CANCEL) {
                     promiseReject(errors)
-                } else if (currentAttempts >= numberOfAttempts) {
+                } else if (err === ERRORS.REQUEST_FAILED && numberOfAttempts !== 0) {
+                    promiseReject(errors)
+                } else if (currentAttempts >= numberOfAttempts && numberOfAttempts !== 0) {
                     promiseReject(errors)
                 } else {
                     call()
