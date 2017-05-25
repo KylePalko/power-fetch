@@ -5,7 +5,7 @@ Power Fetch is built on XMLHttpRequest to allow true cancel/abort of your connec
 ### 1. Create a function to abstract your API call
 
 ```
-import fetch, { METHODS, HEADERS } from 'power-fetch'
+import fetch, { METHODS, HEADERS, STATUS_CODES } from 'power-fetch'
 
 const getIp = () => {
     return fetch({
@@ -17,18 +17,24 @@ const getIp = () => {
         numberOfAttempts: 5, // Setting this to 0 will set the fetch to try indefinitely.
         timeBeforeTimeout: 2000,
         timeBetweenAttempts: 5000
-    }, ({ headers, status, json, resolve, reject }) => {
-        switch (status) {
-            case 200:
-                return resolve(json)
-            default:
-                return reject('unknown-api-error')
-        }
-    })
+    }, callback)
 }
 ```
 
-### 2. Use your API call
+### 2. Create your callback function
+Simply resolve or reject to complete your callback. If you reject `power-fetch` will make another request until your total `numberOfAttempts` is reached. If you resolve `power-fetch` will immediately return with the argument passed to the `resolve` function.
+```
+const callback = ({ headers, status, json, resolve, reject }) => {
+    switch (status) {
+        case STATUS_CODES.OK:
+            return resolve(json)
+        default:
+            return reject('unknown-api-error')
+    }
+})
+```
+
+### 3. Use your API call
 
 ```
 try {
