@@ -5,7 +5,7 @@ Power Fetch is built on XMLHttpRequest to allow true cancel/abort of your connec
 ### 1. Create a function to abstract your API call
 
 ```
-import fetch, { METHODS, HEADERS } from 'power-fetch'
+import fetch, { METHODS, HEADERS, STATUS_CODES } from 'power-fetch'
 
 const getIp = () => {
     return fetch({
@@ -26,7 +26,7 @@ Simply resolve or reject to complete your callback. If you reject `power-fetch` 
 ```
 const callback = ({ headers, status, json, resolve, reject }) => {
     switch (status) {
-        case 200:
+        case STATUS_CODES.OK:
             return resolve(json)
         default:
             return reject('unknown-api-error')
