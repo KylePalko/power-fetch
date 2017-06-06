@@ -28,8 +28,6 @@ export default ({ url, method, body, headers = HEADERS.JSON, numberOfAttempts = 
 
                 if (err === ERRORS.CANCEL) {
                     promiseReject(errors)
-                } else if (err === ERRORS.REQUEST_FAILED && numberOfAttempts !== 0) {
-                    promiseReject(errors)
                 } else if (currentAttempts >= numberOfAttempts && numberOfAttempts !== 0) {
                     promiseReject(errors)
                 } else {
