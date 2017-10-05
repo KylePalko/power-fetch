@@ -2,6 +2,8 @@
 
 Power Fetch is built on XMLHttpRequest to allow true cancel/abort of your connection.
 
+_NOTE: Power Fetch currently on supports JSON bodies and applies `JSON.stringify()` to them internally (do not stringify your payload)._
+
 ### 1. Create a function to abstract your API call
 
 ```
